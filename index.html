@@ -107,6 +107,115 @@
 
     <!-- JavaScript untuk Menangani Logika WebSockets & Chart -->
     <script>
+
+        // Ganti dengan API Key Gemini Anda sendiri
+const GEMINI_API_KEY = "AIzaSyCFQb7-Nt4cSuDI4EfoZplOnPQqhQYMDWI"; 
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+let aiIsRequesting = false;
+
+// 1. Fungsi Baru: Mengirim data pasar real-time ke API Gemini
+async function panggilAIAsli(statusPasar, hargaSaatIni, persentase24h) {
+    if (aiIsRequesting) return; // Mencegah spam request saat API sedang berpikir
+    aiIsRequesting = true;
+
+    const element = document.getElementById('ai-text-box');
+    element.innerHTML = "[Kronos AI] Sedang merumuskan analisis makro via Google Cloud...";
+    element.classList.add('typing-effect');
+
+    // Menyusun Prompt kontekstual berdasarkan kondisi pasar riil
+    const promptSkenario = `Anda adalah KRONOS AI, sebuah AI Trading Agent dengan gaya Cyberpunk yang agresif dan cerdas. 
+    Saat ini pasar Bitcoin (BTC/USDT) sedang mengalami kondisi: ${statusPasar}.
+    Harga saat ini: $${parseFloat(hargaSaatIni).toLocaleString()}
+    Perubahan 24 Jam: ${persentase24h}%
+    
+    Berikan analisis teknikal singkat (maksimal 3 kalimat) mengenai apa yang harus dilakukan trader (UP/BUY atau DOWN/SELL) beserta alasannya berdasarkan psikologi pasar saat ini. Gunakan istilah keren seperti 'Resistensi', 'Support', atau 'Liquidity Pool'.`;
+
+    try {
+        const response = await fetch(GEMINI_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptSkenario }] }]
+            })
+        });
+
+        const data = await response.json();
+        
+        // Ekstraksi teks jawaban dari struktur JSON Gemini
+        const hasilAnalisisAI = data.candidates[0].content.parts[0].text;
+        
+        // Tampilkan hasil analisis asli dari AI ke kotak terminal website
+        element.innerHTML = `[KRONOS DATASTREAM]\n\n${hasilAnalisisAI}`;
+
+    } catch (error) {
+        console.error("Gagal mengambil data dari AI:", error);
+        element.innerHTML = "[ERROR] Gagal melakukan sinkronisasi dengan AI Core. Periksa koneksi atau API Key Anda.";
+    } finally {
+        element.classList.remove('typing-effect');
+        aiIsRequesting = false;
+    }
+}
+
+// 2. Modifikasi Bagian di Dalam WebSocket (ws.onmessage)
+// Cari logika "if (diff > 0.5)" dan "else if (diff < -0.5)" di kode lama Anda, lalu sesuaikan jalurnya seperti ini:
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    const currentPrice = parseFloat(data.c).toFixed(2);
+    const percentChange = parseFloat(data.P).toFixed(2);
+    
+    const priceEl = document.getElementById('live-price');
+    const changeEl = document.getElementById('price-change');
+    
+    priceEl.innerText = `$${parseFloat(currentPrice).toLocaleString()}`;
+    changeEl.innerText = `${percentChange}%`;
+
+    if(lastPrice > 0) {
+        let diff = currentPrice - lastPrice;
+        
+        if (diff > 1.5) { // Naik signifikan (Ambang batas dinaikkan agar AI tidak spamming tiap detik)
+            priceEl.className = "text-4xl font-mono font-bold text-green-400 neon-text-green mb-4";
+            document.getElementById('trend-indicator').innerText = "PUMP SPEED";
+            document.getElementById('trend-indicator').className = "text-xs font-mono px-2 py-0.5 rounded bg-green-950 text-green-400 border border-green-800";
+            
+            // PREDIKSI AKSI & TRIGGER AI ASLI
+            document.getElementById('ai-prediction').innerText = "UP / BUY";
+            document.getElementById('ai-prediction').className = "text-green-400 font-bold tracking-wide";
+            
+            panggilAIAsli("PUMPING / LONJAKAN TAJAM INSTAN", currentPrice, percentChange);
+            updateAggregatorSignals("BUY");
+        } 
+        else if (diff < -1.5) { // Turun signifikan
+            priceEl.className = "text-4xl font-mono font-bold text-red-500 neon-text-red mb-4";
+            document.getElementById('trend-indicator').innerText = "DUMP SPEED";
+            document.getElementById('trend-indicator').className = "text-xs font-mono px-2 py-0.5 rounded bg-red-950 text-red-500 border border-red-900";
+            
+            // PREDIKSI AKSI & TRIGGER AI ASLI
+            document.getElementById('ai-prediction').innerText = "DOWN / SELL";
+            document.getElementById('ai-prediction').className = "text-red-500 font-bold tracking-wide";
+            
+            panggilAIAsli("DUMPING / PENURUNAN DRASTIS INSTAN", currentPrice, percentChange);
+            updateAggregatorSignals("SELL");
+        }
+    }
+    lastPrice = currentPrice;
+
+    if(percentChange >= 0) {
+        changeEl.className = "text-sm font-mono font-bold text-green-400";
+    } else {
+        changeEl.className = "text-sm font-mono font-bold text-red-500";
+    }
+
+    chartData.datasets[0].data.push(currentPrice);
+    if (chartData.datasets[0].data.length > maxData) {
+        chartData.datasets[0].data.shift();
+    }
+    mainChart.update();
+};
+
+
+        
         // Inisialisasi Chart.js dengan tema Gelap / Neon
         const ctx = document.getElementById('realtimeChart').getContext('2d');
         const maxDataPoints = 30; // Batasi grafik hanya menampilkan 30 data terakhir
