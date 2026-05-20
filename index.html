@@ -3,127 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asep Store | Profesional RGB Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>RGB Cyber Trading Analytics</title>
+    <!-- Tailwind CSS untuk Styling Cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js untuk Grafik Real-time -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- Reset & Font Modern --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        /* Efek Animasi RGB Glow */
+        @keyframes rgb-glow {
+            0% { border-color: #ff0055; box-shadow: 0 0 10px #ff0055; }
+            33% { border-color: #00ff66; box-shadow: 0 0 10px #00ff66; }
+            66% { border-color: #00f0ff; box-shadow: 0 0 10px #00f0ff; }
+            100% { border-color: #ff0055; box-shadow: 0 0 10px #ff0055; }
         }
-
-        /* --- RGB Dynamic Gradient (Latar Belakang) --- */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-            background: linear-gradient(-45deg, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255));
-            background-size: 400% 400%;
-            animation: gradient 10s ease infinite;
-            overflow-x: hidden; /* Mencegah scroll horizontal karena iklan */
+        .rgb-border {
+            border: 2px solid;
+            animation: rgb-glow 8s infinite linear;
         }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* --- Kartu Profesional --- */
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* --- Teks Judul RGB Dinamis --- */
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            color: transparent;
-            background: linear-gradient(90deg, #f00, #0f0, #00f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: text-gradient 3s linear infinite;
-        }
-
-        @keyframes text-gradient {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        h2 {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- Konten Profesional --- */
-        .info {
-            text-align: left;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .info strong { color: #333; }
-
-        /* --- Tombol dengan Aksen RGB --- */
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            text-decoration: none;
-            color: #fff;
-            background: #2c3e50;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: 0.3s ease;
-            position: relative;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
+        .neon-text-cyan { text-shadow: 0 0 8px #00f0ff; }
+        .neon-text-green { text-shadow: 0 0 8px #00ff66; }
+        .neon-text-red { text-shadow: 0 0 8px #ff0055; }
     </style>
 </head>
-<body>
+<body class="bg-black text-gray-200 font-sans min-h-screen p-4 md:p-8">
 
-    <div class="container">
-        <h1>ASEP STORE</h1>
-        <h2>Digital Solutions</h2>
+    <!-- Header Banner -->
+    <header class="max-w-7xl mx-auto mb-8 p-4 bg-gray-900/80 rounded-xl rgb-border flex flex-col md:flex-row justify-between items-center backdrop-blur-md">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-green-400 to-pink-500 neon-text-cyan">
+                NEXUS QUANTUM TRADING
+            </h1>
+            <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Real-time RGB Analytics Dashboard</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-mono text-green-400 tracking-wider">LIVE DATA FEED (BINANCE WS)</span>
+        </div>
+    </header>
 
-        <div class="info">
-            <p><strong>Tentang Kami:</strong> Kami menyediakan solusi digital profesional, mulai dari pengembangan website hingga strategi konten yang dinamis.</p>
-            <br>
-            <p><strong>Layanan Utama:</strong></p>
-            <p>• Website Development</p>
-            <p>• UI/UX Design</p>
-            <p>• Digital Marketing</p>
+    <!-- Main Grid -->
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Price Tickers & Metrics -->
+        <div class="space-y-6">
+            <!-- Main Live Ticker Card -->
+            <div class="bg-gray-900 p-6 rounded-xl border border-gray-800 shadow-[0_0_15px_rgba(0,240,255,0.1)]">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xl font-bold tracking-wide">BTC / USDT</span>
+                    <span id="price-change-percent" class="text-sm font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-400">0.00%</span>
+                </div>
+                <div id="live-price" class="text-4xl font-mono font-bold tracking-tight text-white mb-2 transition-all duration-200">
+                    $0.00
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-800 text-xs font-mono">
+                    <div>
+                        <span class="text-gray-500 block">24h HIGH</span>
+                        <span id="price-high" class="text-gray-300 font-bold">$0.00</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 block">24h LOW</span>
+                        <span id="price-low" class="text-gray-300 font-bold">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Analysis Signals -->
+            <div class="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-widest mb-4 neon-text-cyan">Analisis Algoritma (Simulasi RSI)</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1">
+                            <span class="text-gray-400">RSI (14) Indicator</span>
+                            <span id="rsi-value" class="text-cyan-400 font-bold">50.00</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                            <div id="rsi-bar" class="bg-cyan-500 h-full transition-all duration-300 shadow-[0_0_8px_#00f0ff]" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-black rounded border border-gray-800 flex justify-between items-center">
+                        <span class="text-xs text-gray-400 uppercase">Sinyal Konsensus:</span>
+                        <span id="signal-badge" class="text-sm font-bold px-3 py-1 rounded bg-gray-800 text-yellow-400 uppercase tracking-wider">NEUTRAL</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <a href="#" class="btn">Hubungi Kami</a>
-    </div>
+        <!-- Right Column: Big Chart (Spans 2 columns) -->
+        <div class="lg:col-span-2 bg-gray-900 p-6 rounded-xl border border-gray-800 shadow-[0_0_20px_rgba(0,255,102,0.05)] flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold tracking-wide uppercase text-gray-300">Grafik Kinerja Real-time</h2>
+                <span class="text-xs text-gray-500 font-mono">Interval: Tick demi Tick</span>
+            </div>
+            <!-- Container Chart -->
+            <div class="relative w-full h-64 md:h-80">
+                <canvas id="realtimeChart"></canvas>
+            </div>
+        </div>
 
-    <script src="https://pl29498318.effectivecpmnetwork.com/a3/8f/60/a38f6056c69d3f3ecc30935ec4aa7ff7.js"></script>
+    </main>
 
+    <!-- JavaScript untuk Menangani Logika WebSockets & Chart -->
+    <script>
+        // Inisialisasi Chart.js dengan tema Gelap / Neon
+        const ctx = document.getElementById('realtimeChart').getContext('2d');
+        const maxDataPoints = 30; // Batasi grafik hanya menampilkan 30 data terakhir
+        
+        const chartData = {
+            labels: Array(maxDataPoints).fill(''),
+            datasets: [{
+                label: 'Harga BTC ($)',
+                data: Array(maxDataPoints).fill(null),
+                borderColor: '#00f0ff',
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.2,
+                fill: true,
+                backgroundColor: (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, context.chart.height);
+                    gradient.addColorStop(0, 'rgba(0, 240, 255, 0.2)');
+                    gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
+                    return gradient;
+                }
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { display: false } },
+                    y: { 
+                        grid: { color: '#1f2937' },
+                        ticks: { color: '#9ca3af', font: { family: 'monospace' } }
+                    }
+                },
+                animation: { duration: 0 } // Matikan animasi bawaan agar render real-time mulus
+            }
+        };
+
+        const realtimeChart = new Chart(ctx, config);
+
+        // Menghubungkan ke Stream WebSocket Publik Binance (Ticker BTC/USDT)
+        const wsUrl = "wss://stream.binance.com:9443/ws/btcusdt@ticker";
+        const ws = new WebSocket(wsUrl);
+
+        let lastPrice = 0;
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            // Ekstraksi Data dari JSON Binance
+            const currentPrice = parseFloat(data.c).toFixed(2); // 'c' = close price
+            const priceChangePercent = parseFloat(data.P).toFixed(2); // 'P' = price change percent
+            const highPrice = parseFloat(data.h).toFixed(2); // 'h' = high
+            const lowPrice = parseFloat(data.l).toFixed(2); // 'l' = low
+
+            // UI Elements
+            const priceEl = document.getElementById('live-price');
+            const percentEl = document.getElementById('price-change-percent');
+            
+            // Tampilkan Data ke Layar
+            priceEl.innerText = `$${parseFloat(currentPrice).toLocaleString()}`;
+            document.getElementById('price-high').innerText = `$${parseFloat(highPrice).toLocaleString()}`;
+            document.getElementById('price-low').innerText = `$${parseFloat(lowPrice).toLocaleString()}`;
+            
+            // Efek Flash Warna RGB (Hijau Naik, Merah Turun) saat harga bergeser
+            if (lastPrice > 0) {
+                if (currentPrice > lastPrice) {
+                    priceEl.className = "text-4xl font-mono font-bold tracking-tight text-green-400 neon-text-green mb-2";
+                } else if (currentPrice < lastPrice) {
+                    priceEl.className = "text-4xl font-mono font-bold tracking-tight text-red-500 neon-text-red mb-2";
+                }
+            }
+            lastPrice = currentPrice;
+
+            // Atur Label Persentase 24 Jam
+            percentEl.innerText = `${priceChangePercent}%`;
+            if (priceChangePercent >= 0) {
+                percentEl.className = "text-sm font-mono px-2 py-0.5 rounded bg-green-950/50 text-green-400 border border-green-800";
+            } else {
+                percentEl.className = "text-sm font-mono px-2 py-0.5 rounded bg-red-950/50 text-red-400 border border-red-900";
+            }
+
+            // Update data ke dalam grafik
+            chartData.datasets[0].data.push(currentPrice);
+            if (chartData.datasets[0].data.length > maxDataPoints) {
+                chartData.datasets[0].data.shift();
+            }
+            realtimeChart.update();
+
+            // Simulasi Indikator Analisis (RSI Mengikuti Fluktuasi Harga Mikro)
+            generateSimulatedRSI(currentPrice);
+        };
+
+        // Fungsi Simulasi Penghitungan RSI Sederhana agar UI Bergerak Dinamis
+        function generateSimulatedRSI(price) {
+            const seed = parseFloat(price.toString().slice(-2));
+            // Konversi rentang harga mikro ujung menjadi skala 10-90
+            const simulatedRSI = Math.min(Math.max((seed / 100) * 100, 15), 85).toFixed(2);
+            
+            document.getElementById('rsi-value').innerText = simulatedRSI;
+            const rsiBar = document.getElementById('rsi-bar');
+            const signalBadge = document.getElementById('signal-badge');
+            
+            rsiBar.style.width = `${simulatedRSI}%`;
+
+            if (simulatedRSI >= 70) {
+                rsiBar.className = "bg-red-500 h-full transition-all duration-300 shadow-[0_0_8px_#ff0055]";
+                signalBadge.innerText = "OVERBOUGHT (SELL)";
+                signalBadge.className = "text-sm font-bold px-3 py-1 rounded bg-red-950/50 text-red-400 border border-red-900 uppercase tracking-wider";
+            } else if (simulatedRSI <= 30) {
+                rsiBar.className = "bg-green-400 h-full transition-all duration-300 shadow-[0_0_8px_#00ff66]";
+                signalBadge.innerText = "OVERSOLD (BUY)";
+                signalBadge.className = "text-sm font-bold px-3 py-1 rounded bg-green-950/50 text-green-400 border border-green-900 uppercase tracking-wider";
+            } else {
+                rsiBar.className = "bg-cyan-400 h-full transition-all duration-300 shadow-[0_0_8px_#00f0ff]";
+                signalBadge.innerText = "NEUTRAL";
+                signalBadge.className = "text-sm font-bold px-3 py-1 rounded bg-gray-800 text-yellow-400 uppercase tracking-wider";
+            }
+        }
+
+        ws.onerror = (err) => console.error("WS Error: ", err);
+    </script>
 </body>
 </html>
